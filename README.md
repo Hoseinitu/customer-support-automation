@@ -19,7 +19,7 @@ Features:
 - Delayed Ticket Detection: Identifies unresolved tickets that have been open for more than three days.
 - Automated Reporting: Calculates ticket statistics and sends reports to managers.
 
-- Workflows:
+ Workflows:
 
 This project consists of four independent workflows:
 
@@ -54,14 +54,14 @@ This project consists of four independent workflows:
 - Generates a summary report.
 - Sends the report to the manager via email.
 
-- Technologies Used:
+ Technologies Used:
 
 - n8n: Workflow automation and orchestration.
 - JavaScript: Data processing and ticket priority classification.
 - n8n Data Tables: Data storage and ticket history management.
 - SMTP / Gmail: Automated email notifications and reporting.
 
-- Database Structure:
+ Database Structure:
 
 The project uses two n8n Data Tables to store and manage information.
 
@@ -91,7 +91,7 @@ Stores the history of ticket status changes, including:
 - Agent note
 - Change timestamp
 
-- Installation & Setup:
+ Installation & Setup:
 
 Prerequisites
 
