@@ -19,6 +19,17 @@ Features:
 - Delayed Ticket Detection: Identifies unresolved tickets that have been open for more than three days.
 - Automated Reporting: Calculates ticket statistics and sends reports to managers.
 
+## Project Highlights
+
+- Automated Business Logic: Uses JavaScript to classify customer tickets based on predefined keywords.
+- Priority-Based Processing: Separates Normal, Important, and Urgent support requests.
+- Automated Team Routing: Assigns tickets to Technical Support, Billing Department, or Customer Service.
+- Status Tracking: Maintains ticket status and records changes in a separate history table.
+- Scheduled Monitoring: Automatically detects unresolved tickets older than three days.
+- Management Insights: Generates daily reports with ticket statistics and performance metrics.
+- Modular Architecture: Separates ticket creation, status management, monitoring, and reporting into four workflows.
+
+
  Workflows:
 
 This project consists of four independent workflows:
