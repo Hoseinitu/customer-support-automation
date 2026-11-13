@@ -1,0 +1,122 @@
+{
+  "name": "Ticket Reporting",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "4d1cd1d5-f0ac-437c-9365-e4c1ef11cd41",
+      "name": "Start Ticket Report"
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "dataTableId": {
+          "__rl": true,
+          "value": "lgHQSFMVzpMeEXKl",
+          "mode": "list",
+          "cachedResultName": "CustomerTickets",
+          "cachedResultUrl": "/projects/qZFL44Xa3P7jrN3O/datatables/lgHQSFMVzpMeEXKl"
+        }
+      },
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        224,
+        0
+      ],
+      "id": "55aac90e-35df-48da-a2fc-9c7ffbe54377",
+      "name": "Get All Tickets"
+    },
+    {
+      "parameters": {
+        "jsCode": "const tickets = $input.all().map(item => item.json);\n\nconst totalTickets = tickets.length;\n\nconst openTickets = tickets.filter(ticket => ticket.status === \"Open\" ).length;\n\nconst inProgressTickets = tickets.filter(ticket =>\n  ticket.status === \"In Progress\"\n).length;\n\nconst resolvedTickets = tickets.filter(ticket =>\n  ticket.status === \"Resolved\"\n).length;\n\nconst delayedTickets = tickets.filter(ticket =>\n  ticket.isDelayed === true\n).length;\n\nlet resolvedRate = 0;\n\nif (totalTickets > 0) {\n  resolvedRate = (resolvedTickets / totalTickets) * 100;}\n\n  let delayedRate = 0;\n  if (totalTickets > 0) {delayedRate = (delayedRate / totalTickets) * 100;\n                       }\n\nconst summary = `Support Ticket Report\n\nTotal Tickets: ${totalTickets}\nOpen Tickets: ${openTickets}\nIn Progress Tickets: ${inProgressTickets}\nResolved Tickets: ${resolvedTickets}\nDelayed Tickets: ${delayedTickets}\n\nResolved Rate: ${resolvedRate.toFixed(2)}%\nDelayed Rate: ${delayedRate.toFixed(2)}%`;\n\nreturn [{\n  json: {\n    totalTickets,\n    openTickets,\n    inProgressTickets,\n    resolvedTickets,\n    delayedTickets,\n    resolvedRate: Number(resolvedRate.toFixed(2)),\n    delayedRate: Number(delayedRate.toFixed(2)),\n    summary: summary\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        448,
+        0
+      ],
+      "id": "9891e1f1-fb40-4598-9415-f2ab1cbd23b8",
+      "name": "Calculate Ticket Statistics"
+    },
+    {
+      "parameters": {
+        "fromEmail": "er@example.com",
+        "toEmail": "er@example.com",
+        "subject": "Daily Customer Support Report",
+        "html": "=<h2>Daily Customer Support Report</h2><p>Hello Manager,</p><p>Here is the latest overview of customer support activities:</p><ul>\n<li><strong>Total Tickets:</strong> {{ $json.totalTickets }}</li>\n<li><strong>Open Tickets:</strong> {{ $json.openTickets }}</li>\n<li><strong>In Progress Tickets:</strong> {{ $json.inProgressTickets }}</li>\n<li><strong>Resolved Tickets:</strong> {{ $json.resolvedTickets }}</li>\n<li><strong>Delayed Tickets:</strong> {{ $json.delayedTickets }}</li>\n</ul><h3>Performance Overview</h3><p><strong>Resolved Rate:</strong> {{ $json.resolvedRate }}%</p>\n<p><strong>Delayed Rate:</strong> {{ $json.delayedRate }}%</p><p>Best regards,<br>Customer Support Automation System</p>",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2.1,
+      "position": [
+        672,
+        0
+      ],
+      "id": "7edaf619-1772-4f3f-9bf5-e8a5c732b14b",
+      "name": "Send an Email",
+      "webhookId": "c3f34873-551f-4df7-9dbe-99d798c813f5",
+      "credentials": {
+        "smtp": {
+          "id": "4cXPcBVgXkBKapSf",
+          "name": "SMTP account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Start Ticket Report": {
+      "main": [
+        [
+          {
+            "node": "Get All Tickets",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get All Tickets": {
+      "main": [
+        [
+          {
+            "node": "Calculate Ticket Statistics",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Calculate Ticket Statistics": {
+      "main": [
+        [
+          {
+            "node": "Send an Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "b5f707bd-2492-421f-8c40-5f3b4a6e59ca",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "ea14c1875db6800390f837088aa322cf5ae66a3347aa0e3fe68e4ef29d4cbfa7"
+  },
+  "nodeGroups": [],
+  "id": "mv9n7YFEu1ughwRd",
+  "tags": []
+}

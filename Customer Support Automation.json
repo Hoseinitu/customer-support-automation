@@ -1,0 +1,972 @@
+{
+  "name": "Customer Support Automatison",
+  "nodes": [
+    {
+      "parameters": {
+        "formTitle": "Customer Support Request",
+        "formDescription": "Please complete the form below to submit your support request.",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Full Name",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Email Address",
+              "fieldType": "email",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Subject",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Category",
+              "fieldType": "dropdown",
+              "fieldOptions": {
+                "values": [
+                  {
+                    "option": "Technical"
+                  },
+                  {
+                    "option": "Billing"
+                  },
+                  {
+                    "option": "General"
+                  }
+                ]
+              },
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Problem Description",
+              "fieldType": "textarea",
+              "requiredField": true
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.6,
+      "position": [
+        0,
+        0
+      ],
+      "id": "e5bc5257-692f-4578-a57c-f54fa3b6478e",
+      "name": "Receive Customer Request",
+      "webhookId": "776882ee-4d36-4d88-9b0a-c134e1b25c45"
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "const description = $json[\"Problem Description\"].toLowerCase();\n\nconst subject = $json[\"Subject\"].toLowerCase();\n\nlet priority = \"Normal\";\n\nconst urgentWords = [\n  \"hacked\",\n  \"security breach\",\n  \"stolen\",\n  \"cannot access\",\n  \"account locked\",\n  \"cannot login\"\n];\n\nconst importantWords = [\n  \"payment\",\n  \"billing\",\n  \"refund\",\n  \"error\",\n  \"failed\"\n];\n\nif (urgentWords.some(word =>\n  description.includes(word) || subject.includes(word)\n)) {\n  priority = \"Urgent\";\n} else if (importantWords.some(word =>\n  description.includes(word) || subject.includes(word)\n)) {\n  priority = \"Important\";\n}\n\nreturn {\n  ...$json,\n  priority: priority\n};"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        224,
+        0
+      ],
+      "id": "50219265-166a-461f-886d-8b9c624cd35d",
+      "name": "Classify Ticket Priority"
+    },
+    {
+      "parameters": {
+        "dataTableId": {
+          "__rl": true,
+          "value": "lgHQSFMVzpMeEXKl",
+          "mode": "list",
+          "cachedResultName": "CustomerTickets",
+          "cachedResultUrl": "/projects/qZFL44Xa3P7jrN3O/datatables/lgHQSFMVzpMeEXKl"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "customerName": "={{ $json[\"Full Name\"] }}",
+            "customerEmail": "={{ $json[\"Email Address\"] }}",
+            "subject": "={{ $json.Subject }}",
+            "category": "={{ $json.Category }}",
+            "description": "={{ $json[\"Problem Description\"] }}",
+            "priority": "={{ $json.priority }}",
+            "status": "Open"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "customerName",
+              "displayName": "customerName",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "customerEmail",
+              "displayName": "customerEmail",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "subject",
+              "displayName": "subject",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "category",
+              "displayName": "category",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "description",
+              "displayName": "description",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "priority",
+              "displayName": "priority",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "status",
+              "displayName": "status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "assignedTeam",
+              "displayName": "assignedTeam",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "agentNote",
+              "displayName": "agentNote",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "resolvedAt",
+              "displayName": "resolvedAt",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "readOnly": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        448,
+        0
+      ],
+      "id": "02063566-86f4-41c5-9a5d-a409e7bbfd5a",
+      "name": "Save New Ticket"
+    },
+    {
+      "parameters": {
+        "fromEmail": "er@exmple.com",
+        "toEmail": "={{ $json.customerEmail }}",
+        "subject": "Support Request Received",
+        "html": "=<h2>Support Request Received</h2>\n\n<p>Dear {{ $json.customerName }},</p>\n\n<p>Your support request has been received successfully.</p>\n\n<p><strong>Subject:</strong> {{ $json.subject }}</p>\n\n<p><strong>Category:</strong> {{ $json.category }}</p>\n\n<p><strong>Priority:</strong> {{ $json.priority }}</p>\n\n<p>Our support team will review your request shortly.</p>\n\n<p>Thank you for contacting us.</p>\n\n<p>Customer Support Team</p>",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2.1,
+      "position": [
+        672,
+        0
+      ],
+      "id": "a3793a96-12b5-48cc-90aa-c92ca380fda3",
+      "name": "Send Customer Confirmation",
+      "webhookId": "a9b5d59e-f8c1-477b-991b-623e01526287",
+      "credentials": {
+        "smtp": {
+          "id": "4cXPcBVgXkBKapSf",
+          "name": "SMTP account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 4
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.category }}",
+                    "rightValue": "Technical",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "71b52ff0-9d03-403a-8364-fdd6808e376d"
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 4
+                },
+                "conditions": [
+                  {
+                    "id": "95baeead-1818-4747-aa25-f0cff6340033",
+                    "leftValue": "={{ $json.category }}",
+                    "rightValue": "Billing",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 4
+                },
+                "conditions": [
+                  {
+                    "id": "1ac41ff3-73ad-40af-901e-1cad606b8723",
+                    "leftValue": "={{ $json.category }}",
+                    "rightValue": "General",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.5,
+      "position": [
+        304,
+        256
+      ],
+      "id": "cbbf83a5-a6ce-4a6f-a660-57b8e248872d",
+      "name": "Route Ticket by Category"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "ca1cd654-9101-460d-bcdd-dda051e87588",
+              "name": "assignedTeam",
+              "value": "Technical Support",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        848,
+        112
+      ],
+      "id": "d5d599be-9fc9-44a6-89db-06bf96044ca8",
+      "name": "Assign Technical Support"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "dataTableId": {
+          "__rl": true,
+          "value": "lgHQSFMVzpMeEXKl",
+          "mode": "list",
+          "cachedResultName": "CustomerTickets",
+          "cachedResultUrl": "/projects/qZFL44Xa3P7jrN3O/datatables/lgHQSFMVzpMeEXKl"
+        },
+        "filters": {
+          "conditions": [
+            {
+              "keyValue": "={{ $json.id }}"
+            }
+          ]
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "assignedTeam": "Technical Support"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "customerName",
+              "displayName": "customerName",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "customerEmail",
+              "displayName": "customerEmail",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "subject",
+              "displayName": "subject",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "category",
+              "displayName": "category",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "description",
+              "displayName": "description",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "priority",
+              "displayName": "priority",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "status",
+              "displayName": "status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "assignedTeam",
+              "displayName": "assignedTeam",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        1104,
+        112
+      ],
+      "id": "690e0366-696a-411a-be7c-2d75da1a643a",
+      "name": "Update Technical Ticket"
+    },
+    {
+      "parameters": {
+        "fromEmail": "er@example.com",
+        "toEmail": "er@example.com",
+        "subject": "New Technical Support Ticket",
+        "html": "=<h2>New Technical Support Ticket</h2>\n\n<p>A new technical support ticket has been assigned to your department.</p>\n\n<p><strong>Customer:</strong>\n{{ $json.customerName }}</p>\n\n<p><strong>Subject:</strong>\n{{ $json.subject }}</p>\n\n<p><strong>Email:</strong>\n{{ $json.customerEmail }}</p>\n\n<p><strong>Description:</strong>\n{{ $json.description }}</p>\n\n<p><strong>priority:</strong>\n{{ $json.priority }}</p>\n\n<p><strong>Assigned Team:</strong>\n{{ $json.assignedTeam }}</p>\n\n<p>Please review this ticket.</p>\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2.1,
+      "position": [
+        1328,
+        112
+      ],
+      "id": "bd063024-db7c-4d2b-8064-c242bc752b5b",
+      "name": "Notify Technical Team",
+      "webhookId": "2035d1a6-631e-4352-965e-427756e10ac5",
+      "credentials": {
+        "smtp": {
+          "id": "4cXPcBVgXkBKapSf",
+          "name": "SMTP account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "b4a5e4c1-1a81-4132-9f66-aee4cd66f589",
+              "name": "assignedTeam",
+              "value": "Billing Department",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        848,
+        272
+      ],
+      "id": "002443a2-a502-4927-84f0-d11b3350d0c9",
+      "name": "Assign Billing Department"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "dataTableId": {
+          "__rl": true,
+          "value": "lgHQSFMVzpMeEXKl",
+          "mode": "list",
+          "cachedResultName": "CustomerTickets",
+          "cachedResultUrl": "/projects/qZFL44Xa3P7jrN3O/datatables/lgHQSFMVzpMeEXKl"
+        },
+        "filters": {
+          "conditions": [
+            {
+              "keyValue": "={{ $json.id }}"
+            }
+          ]
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "assignedTeam": "Billing Department"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "customerName",
+              "displayName": "customerName",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "customerEmail",
+              "displayName": "customerEmail",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "subject",
+              "displayName": "subject",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "category",
+              "displayName": "category",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "description",
+              "displayName": "description",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "priority",
+              "displayName": "priority",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "status",
+              "displayName": "status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "assignedTeam",
+              "displayName": "assignedTeam",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        1104,
+        272
+      ],
+      "id": "21b6d551-9571-4684-800f-29482836f2e5",
+      "name": "Update Billing Ticket"
+    },
+    {
+      "parameters": {
+        "fromEmail": "er@example.com",
+        "toEmail": "er@example.com",
+        "subject": "New Billing Support Ticket",
+        "html": "=<h2>New Billing Support Ticket</h2>\n\n<p>A new billing support ticket has been assigned to your department.</p>\n\n<p><strong>Customer:</strong> {{ $json.customerName }}</p>\n<p><strong>Email:</strong> {{ $json.customerEmail }}</p>\n<p><strong>Subject:</strong> {{ $json.subject }}</p>\n<p><strong>Description:</strong> {{ $json[\"description\"] }}</p>\n<p><strong>Priority:</strong> {{ $json.priority }}</p>\n<p><strong>Assigned Team:</strong> {{ $json.assignedTeam }}</p>\n\n<p>Please review this ticket.</p>",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2.1,
+      "position": [
+        1328,
+        272
+      ],
+      "id": "d0a47f9f-5adc-44c8-814d-b0c07c7aeaf9",
+      "name": "Notify Billing Team",
+      "webhookId": "4c060e01-7a15-4d07-ade0-ac8aafc9818c",
+      "credentials": {
+        "smtp": {
+          "id": "4cXPcBVgXkBKapSf",
+          "name": "SMTP account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "02725d3b-b633-4ada-aaef-ada483075474",
+              "name": "assignedTeam",
+              "value": "Customer Service",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        848,
+        448
+      ],
+      "id": "b166486b-53cd-4644-ab32-b585a67297a4",
+      "name": "Assign Customer Service"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "dataTableId": {
+          "__rl": true,
+          "value": "lgHQSFMVzpMeEXKl",
+          "mode": "list",
+          "cachedResultName": "CustomerTickets",
+          "cachedResultUrl": "/projects/qZFL44Xa3P7jrN3O/datatables/lgHQSFMVzpMeEXKl"
+        },
+        "filters": {
+          "conditions": [
+            {
+              "keyValue": "={{ $json.id }}"
+            }
+          ]
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "assignedTeam": "Customer Service"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "customerName",
+              "displayName": "customerName",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "customerEmail",
+              "displayName": "customerEmail",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "subject",
+              "displayName": "subject",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "category",
+              "displayName": "category",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "description",
+              "displayName": "description",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "priority",
+              "displayName": "priority",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "status",
+              "displayName": "status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "assignedTeam",
+              "displayName": "assignedTeam",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        1104,
+        448
+      ],
+      "id": "be4c7125-e254-4c8d-aa21-95e89cf405c0",
+      "name": "Update General Ticket"
+    },
+    {
+      "parameters": {
+        "fromEmail": "er@example.com",
+        "toEmail": "er@example.com",
+        "subject": "New General Support Ticket",
+        "html": "=<h2>New General Support Ticket</h2>\n\n<p>A new general support ticket has been assigned to your department.</p>\n\n<p><strong>Customer:</strong> {{ $json.customerName }}</p>\n<p><strong>Email:</strong> {{ $json.customerEmail }}</p>\n<p><strong>Subject:</strong> {{ $json.subject }}</p>\n<p><strong>Description:</strong> {{ $json[\"Problem Description\"] }}</p>\n<p><strong>Priority:</strong> {{ $json.priority }}</p>\n<p><strong>Assigned Team:</strong> {{ $json.assignedTeam }}</p>\n\n<p>Please review this ticket.</p>",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2.1,
+      "position": [
+        1328,
+        448
+      ],
+      "id": "5e530bff-a58f-48d1-9c79-0be747ceb14f",
+      "name": "Notify Customer Service",
+      "webhookId": "602078fb-e34b-439d-92fc-36fbc0767977",
+      "credentials": {
+        "smtp": {
+          "id": "4cXPcBVgXkBKapSf",
+          "name": "SMTP account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Receive Customer Request": {
+      "main": [
+        [
+          {
+            "node": "Classify Ticket Priority",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Classify Ticket Priority": {
+      "main": [
+        [
+          {
+            "node": "Save New Ticket",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Save New Ticket": {
+      "main": [
+        [
+          {
+            "node": "Send Customer Confirmation",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Route Ticket by Category",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Customer Confirmation": {
+      "main": [
+        []
+      ]
+    },
+    "Route Ticket by Category": {
+      "main": [
+        [
+          {
+            "node": "Assign Technical Support",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Assign Billing Department",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Assign Customer Service",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Assign Technical Support": {
+      "main": [
+        [
+          {
+            "node": "Update Technical Ticket",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Technical Ticket": {
+      "main": [
+        [
+          {
+            "node": "Notify Technical Team",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Assign Billing Department": {
+      "main": [
+        [
+          {
+            "node": "Update Billing Ticket",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Billing Ticket": {
+      "main": [
+        [
+          {
+            "node": "Notify Billing Team",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Assign Customer Service": {
+      "main": [
+        [
+          {
+            "node": "Update General Ticket",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update General Ticket": {
+      "main": [
+        [
+          {
+            "node": "Notify Customer Service",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "38bda272-1098-40fc-8419-6b7fb90c1095",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "ea14c1875db6800390f837088aa322cf5ae66a3347aa0e3fe68e4ef29d4cbfa7"
+  },
+  "nodeGroups": [],
+  "id": "4j2x7bqNdAgnIjVv",
+  "tags": []
+}

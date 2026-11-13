@@ -1,0 +1,617 @@
+{
+  "name": "Ticket Status Management",
+  "nodes": [
+    {
+      "parameters": {
+        "dataTableId": {
+          "__rl": true,
+          "value": "ecN8Z48VYlgXPmAL",
+          "mode": "list",
+          "cachedResultName": "TicketHistory",
+          "cachedResultUrl": "/projects/qZFL44Xa3P7jrN3O/datatables/ecN8Z48VYlgXPmAL"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "ticketId": "={{ $json.id }}",
+            "action": "Status Updated",
+            "oldStatus": "={{$('Get Existing Ticket').first().json.status}}",
+            "newStatus": "={{ $('Status Update Form').first().json.status }}",
+            "agentNote": "={{ $('Status Update Form').first().json.agentNote }}",
+            "changedAt": "={{ $now }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "ticketId",
+              "displayName": "ticketId",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "action",
+              "displayName": "action",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "oldStatus",
+              "displayName": "oldStatus",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "newStatus",
+              "displayName": "newStatus",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "agentNote",
+              "displayName": "agentNote",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "changedAt",
+              "displayName": "changedAt",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "readOnly": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        672,
+        -192
+      ],
+      "id": "fd1d9b04-488e-46cd-bbca-25776364db68",
+      "name": "Save Ticket History"
+    },
+    {
+      "parameters": {
+        "formTitle": "Update Ticket Status",
+        "formDescription": "Use this form to update a customer support ticket.",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "ticketId",
+              "fieldType": "number",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "status",
+              "fieldType": "dropdown",
+              "fieldOptions": {
+                "values": [
+                  {
+                    "option": "In Progress"
+                  },
+                  {
+                    "option": "Resolved"
+                  }
+                ]
+              },
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "agentNote",
+              "fieldType": "textarea",
+              "requiredField": true
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.6,
+      "position": [
+        0,
+        0
+      ],
+      "id": "6d7656bb-bb3e-40c4-b07e-6aa04d3f7c7a",
+      "name": "Status Update Form",
+      "webhookId": "c2b5852e-406c-44f4-a53e-2bb14c153879"
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "dataTableId": {
+          "__rl": true,
+          "value": "lgHQSFMVzpMeEXKl",
+          "mode": "list",
+          "cachedResultName": "CustomerTickets",
+          "cachedResultUrl": "/projects/qZFL44Xa3P7jrN3O/datatables/lgHQSFMVzpMeEXKl"
+        },
+        "filters": {
+          "conditions": [
+            {
+              "keyValue": "={{ $json.ticketId }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        224,
+        0
+      ],
+      "id": "7b9978ae-d748-4ec1-a174-8564c0e3ae2d",
+      "name": "Get Existing Ticket"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "dataTableId": {
+          "__rl": true,
+          "value": "lgHQSFMVzpMeEXKl",
+          "mode": "list",
+          "cachedResultName": "CustomerTickets",
+          "cachedResultUrl": "/projects/qZFL44Xa3P7jrN3O/datatables/lgHQSFMVzpMeEXKl"
+        },
+        "filters": {
+          "conditions": [
+            {
+              "keyValue": "={{ $('Status Update Form').first().json.ticketId }}"
+            }
+          ]
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "status": "={{ $('Status Update Form').first().json.status }}",
+            "agentNote": "={{ $('Status Update Form').first().json.agentNote }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "customerName",
+              "displayName": "customerName",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "customerEmail",
+              "displayName": "customerEmail",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "subject",
+              "displayName": "subject",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "category",
+              "displayName": "category",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "description",
+              "displayName": "description",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "priority",
+              "displayName": "priority",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "status",
+              "displayName": "status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "assignedTeam",
+              "displayName": "assignedTeam",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "agentNote",
+              "displayName": "agentNote",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "resolvedAt",
+              "displayName": "resolvedAt",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "isDelayed",
+              "displayName": "isDelayed",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "boolean",
+              "readOnly": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        448,
+        0
+      ],
+      "id": "9fa0cde8-6137-44a8-8feb-c35952d5fec3",
+      "name": "Update Ticket Record"
+    },
+    {
+      "parameters": {
+        "fromEmail": "er@example.com",
+        "toEmail": "={{ $json.customerEmail }}",
+        "subject": "Your Support Ticket Status Has Been Updated",
+        "html": "=<h2>Support Ticket Update</h2>\n\n<p>Dear Customer,</p>\n\n<p>Your support ticket has been updated.</p>\n\n<p><strong>Ticket ID:</strong> {{ $('Status Update Form').first().json.ticketId }}</p>\n\n<p><strong>New Status:</strong> {{ $('Status Update Form').first().json.status }}</p>\n\n<p><strong>Agent Note:</strong> {{ $('Status Update Form').first().json.agentNote }}</p>\n\n<p>Thank you for contacting our support team.</p>",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2.1,
+      "position": [
+        672,
+        0
+      ],
+      "id": "2b05e35f-6e68-4fc7-a860-cb78a83aa830",
+      "name": "Notify Customer Status Update",
+      "webhookId": "47807bad-e507-4b49-a165-d6270166b9cf",
+      "credentials": {
+        "smtp": {
+          "id": "4cXPcBVgXkBKapSf",
+          "name": "SMTP account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "dataTableId": {
+          "__rl": true,
+          "value": "lgHQSFMVzpMeEXKl",
+          "mode": "list",
+          "cachedResultName": "CustomerTickets",
+          "cachedResultUrl": "/projects/qZFL44Xa3P7jrN3O/datatables/lgHQSFMVzpMeEXKl"
+        },
+        "filters": {
+          "conditions": [
+            {
+              "keyValue": "={{ $('Status Update Form').first().json.ticketId }}"
+            }
+          ]
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "resolvedAt": "={{ $now }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "customerName",
+              "displayName": "customerName",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "customerEmail",
+              "displayName": "customerEmail",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "subject",
+              "displayName": "subject",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "category",
+              "displayName": "category",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "description",
+              "displayName": "description",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "priority",
+              "displayName": "priority",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "status",
+              "displayName": "status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "assignedTeam",
+              "displayName": "assignedTeam",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "agentNote",
+              "displayName": "agentNote",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "resolvedAt",
+              "displayName": "resolvedAt",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "isDelayed",
+              "displayName": "isDelayed",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "boolean",
+              "readOnly": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        1120,
+        -96
+      ],
+      "id": "298a793e-447e-46fe-96c2-cbaa22c1d944",
+      "name": "Set Resolved Timetamp"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 4
+          },
+          "conditions": [
+            {
+              "id": "3ba85ee3-d581-431c-aabe-4cf984787651",
+              "leftValue": "={{ $('Status Update Form').first().json.status }}",
+              "rightValue": "Resolved",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.4,
+      "position": [
+        896,
+        0
+      ],
+      "id": "fcbc5876-eaa3-4454-a3e7-295c33fe4f47",
+      "name": "Check Resolved Status"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Save Ticket History": {
+      "main": [
+        [
+          {
+            "node": "Check Resolved Status",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Status Update Form": {
+      "main": [
+        [
+          {
+            "node": "Get Existing Ticket",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Existing Ticket": {
+      "main": [
+        [
+          {
+            "node": "Update Ticket Record",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Ticket Record": {
+      "main": [
+        [
+          {
+            "node": "Notify Customer Status Update",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Save Ticket History",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Notify Customer Status Update": {
+      "main": [
+        [
+          {
+            "node": "Check Resolved Status",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Resolved Status": {
+      "main": [
+        [
+          {
+            "node": "Set Resolved Timetamp",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "530e9956-f204-4c07-a6ee-2cd316f8567f",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "ea14c1875db6800390f837088aa322cf5ae66a3347aa0e3fe68e4ef29d4cbfa7"
+  },
+  "nodeGroups": [],
+  "id": "pPMNubQI2sPhQbmG",
+  "tags": []
+}
