@@ -110,4 +110,20 @@ Setup Steps
 5. Review the workflow settings and form configurations.
 6. Execute the workflows and test the automation process.
 
+7. Screenshots:
+
+8. ## Screenshots
+
+### 1. Customer Support Automation
+![Customer Support Automation](screenshots/01-customer-support-automation.png)
+
+### 2. Ticket Status Management
+![Ticket Status Management](screenshots/02-ticket-status-management.png)
+
+### 3. Delayed Ticket Detection
+![Delayed Ticket Detection](screenshots/03-delayed-ticket-detection.png)
+
+### 4. Ticket Reporting
+![Ticket Reporting](screenshots/04-ticket-reporting.png)
+
 Note: Email credentials must be configured in your own n8n instance. Do not share private credentials or passwords in the repository.
