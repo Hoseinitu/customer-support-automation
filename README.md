@@ -91,6 +91,15 @@ Stores the history of ticket status changes, including:
 - Agent note
 - Change timestamp
 
+## Documentation
+
+Detailed project documentation is available in the following files:
+
+- [Project Description](project_description.md)
+- [Technical Documentation](documentation/technical_documentation.md)
+
+These documents explain the project architecture, workflow logic, database structure, implementation details, and setup requirements.
+
  Installation & Setup:
 
 Prerequisites
