@@ -102,6 +102,49 @@ Stores the history of ticket status changes, including:
 - Agent note
 - Change timestamp
 
+  Data Tables & Database Schema:
+
+The project uses two n8n Data Tables to store ticket information and maintain a history of status changes.
+
+1. CustomerTickets
+
+Stores the main customer support ticket records.
+
+Field| Data Type| Description
+id| Number| Unique ticket identifier
+customerName| String| Customer's full name
+customerEmail| String| Customer's email address
+subject| String| Ticket subject
+category| String| Technical, Billing, or General
+description| String| Problem description
+priority| String| Normal, Important, or Urgent
+status| String| Current ticket status
+createdAt| Date| Ticket creation timestamp
+assignedTeam| String| Assigned support department
+agentNote| String| Support agent's note
+updatedAt| Date| Last update timestamp
+resolvedAt| Date| Ticket resolution timestamp
+isDelayed| Boolean| Indicates whether the ticket is delayed
+
+2. TicketHistory
+
+Stores the history of ticket status changes.
+
+Field| Data Type| Description
+ticketId| Number| Related ticket identifier
+action| String| Recorded action
+oldStatus| String| Previous ticket status
+newStatus| String| Updated ticket status
+agentNote| String| Note added by the support agent
+changedAt| Date| Status change timestamp
+
+Data Management
+
+- "CustomerTickets" stores the current state and details of each ticket.
+- "TicketHistory" maintains a separate record of status changes.
+- Ticket records are updated without losing their previous status history.
+- The reporting workflow uses ticket records to calculate operational statistics.
+
 ## Documentation
 
 Detailed project documentation is available in the following files:
