@@ -130,7 +130,6 @@ Setup Steps
 5. Review the workflow settings and form configurations.
 6. Execute the workflows and test the automation process.
 
-7. Screenshots:
 
 ## Screenshots
 
