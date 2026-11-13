@@ -112,18 +112,16 @@ Setup Steps
 
 7. Screenshots:
 
-8. ## Screenshots
+## Screenshots
 
 ### 1. Customer Support Automation
-![Customer Support Automation](screenshots/01-customer-support-automation.png)
+![Customer Support Automation](screenshots/customer-support-automation.png)
 
 ### 2. Ticket Status Management
-![Ticket Status Management](screenshots/02-ticket-status-management.png)
+![Ticket Status Management](screenshots/ticket-status-management.png)
 
 ### 3. Delayed Ticket Detection
-![Delayed Ticket Detection](screenshots/03-delayed-ticket-detection.png)
+![Delayed Ticket Detection](screenshots/delayed-ticket-detection.png)
 
 ### 4. Ticket Reporting
-![Ticket Reporting](screenshots/04-ticket-reporting.png)
-
-Note: Email credentials must be configured in your own n8n instance. Do not share private credentials or passwords in the repository.
+![Ticket Reporting](screenshots/ticket-reporting.png)
