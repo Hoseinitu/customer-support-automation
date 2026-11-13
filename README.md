@@ -111,6 +111,29 @@ Detailed project documentation is available in the following files:
 
 These documents explain the project architecture, workflow logic, database structure, implementation details, and setup requirements.
 
+## Project Structure
+
+`text
+customer-support-automation/
+│
+├── documentation/
+│   └── technical_documentation.md
+│
+├── screenshots/
+│   ├── customer-support-automation.png
+│   ├── ticket-status-management.png
+│   ├── delayed-ticket-detection.png
+│   └── ticket-reporting.png
+│
+├── workflows/
+│   ├── customer-support-automation.json
+│   ├── ticket-status-management.json
+│   ├── delayed-ticket-detection.json
+│   └── ticket-reporting.json
+│
+├── project_description.md
+└── README.md
+
  Installation & Setup:
 
 Prerequisites
